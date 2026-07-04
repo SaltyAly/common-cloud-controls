@@ -478,3 +478,73 @@ controls:
           - reference-id: CA-7
             strength: 0 # Not yet specified
           - reference-id: RA-5
+  - id: CCC.IAM.CN12
+    group: Access
+    title: Enforce Consent Form Fidelity to Backend Scope Data
+    objective: |
+      Ensure that when a consent form is presented to a user, the front-end
+      copy and data shown match the backend scopes data of the authorization
+      request exactly, so that a user can never grant access broader than,
+      narrower than, or different from what was displayed and approved.
+    assessment-requirements:
+      - id: CCC.IAM.CN12.AR01
+        text: |
+          When a consent form is presented to a user, the form MUST display
+          every scope present in the backend authorization request, AND the
+          front-end copy shown for each scope MUST match the registered
+          description of the corresponding backend scope identifier.
+        applicability:
+          - tlp-clear
+          - tlp-green
+          - tlp-amber
+          - tlp-red
+        recommendation: ""
+      - id: CCC.IAM.CN12.AR02
+        text: |
+          When a consent form is presented to a user, the form MUST NOT
+          display any permission, scope, or data-access description that
+          does not correspond to a scope present in the backend
+          authorization request.
+        applicability:
+          - tlp-clear
+          - tlp-green
+          - tlp-amber
+          - tlp-red
+        recommendation: ""
+      - id: CCC.IAM.CN12.AR03
+        text: |
+          When the front-end copy for a requested scope cannot be resolved,
+          or does not match the backend scopes data, the service MUST NOT
+          present the consent form AND MUST deny the authorization request.
+        applicability:
+          - tlp-clear
+          - tlp-green
+          - tlp-amber
+          - tlp-red
+        recommendation: ""
+      - id: CCC.IAM.CN12.AR04
+        text: |
+          When a user approves a consent form, the service MUST NOT issue a
+          grant or credential containing scopes that were not displayed on
+          the consent form at the time of approval.
+        applicability:
+          - tlp-clear
+          - tlp-green
+          - tlp-amber
+          - tlp-red
+        recommendation: ""
+    threats:
+      - reference-id: CCC
+        entries:
+          - reference-id: CCC.IAM.TH01
+            strength: 0 # Not yet specified
+            remarks: Valid Cloud Credentials Abuse
+    guidelines:
+      - reference-id: NIST-CSF
+        entries:
+          - reference-id: PR.AA-05
+      - reference-id: NIST_800_53
+        entries:
+          - reference-id: AC-3
+            strength: 0 # Not yet specified
+          - reference-id: AC-6
