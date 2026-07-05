@@ -16,6 +16,7 @@ Feature: CCC.Core.CN04.AR02 - Log Data Modification Attempts
     And I refer to "{result}" as "loggingService"
     When I call "{theService}" with "TriggerDataWrite" using argument "{resource-name}"
     And I attach "{result}" to the test output as "Data Write Trigger Result"
+    # Fixed wait for provider log-ingestion latency; the DSL has no wait-until/poll step and 10 s may be too short for some providers.
     And we wait for a period of "10000" ms
     Then I call "{loggingService}" with "QueryLogs" using arguments "{resource-name}", "data-write", and "{20}"
     And I refer to "{result}" as "dataLogs"

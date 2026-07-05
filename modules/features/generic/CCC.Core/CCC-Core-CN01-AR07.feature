@@ -41,7 +41,10 @@ Feature: CCC.Core.CN01.AR07
   Scenario: Verify SMTPS uses IANA-assigned port 465 or 587
     SMTPS can use port 465 (implicit TLS) or 587 (STARTTLS) as assigned by IANA.
 
-    Then "{port-number}" is "465"
+    Then "{port-number}" is a string containing one of
+      | value |
+      | 465   |
+      | 587   |
 
 
 @Behavioural @PerPort @dns

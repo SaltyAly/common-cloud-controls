@@ -15,6 +15,7 @@ Feature: CCC.Core.CN04.AR01 - Log Administrative Access Attempts
     When I call "{theService}" with "UpdateResourcePolicy"
     Then "{result}" is not an error
     And I attach "{result}" to the test output as "Policy Update Result"
+    # Fixed wait for provider log-ingestion latency; the DSL has no wait-until/poll step and 10 s may be too short for some providers.
     And we wait for a period of "10000" ms
     When I call "{loggingService}" with "QueryLogs" using arguments "{resource-name}", "admin", and "{20}"
     Then "{result}" is not an error

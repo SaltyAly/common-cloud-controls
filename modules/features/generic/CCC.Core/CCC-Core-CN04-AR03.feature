@@ -16,6 +16,7 @@ Feature: CCC.Core.CN04.AR03 - Log Data Read Attempts
     And I refer to "{result}" as "loggingService"
     When I call "{theService}" with "TriggerDataRead" using argument "{resource-name}"
     And I attach "{result}" to the test output as "Data Read Trigger Result"
+    # Fixed wait for provider log-ingestion latency; the DSL has no wait-until/poll step and 10 s may be too short for some providers.
     And we wait for a period of "10000" ms
     When I call "{loggingService}" with "QueryLogs" using arguments "{resource-name}", "data-read", and "{20}"
     Then "{result}" is not an error

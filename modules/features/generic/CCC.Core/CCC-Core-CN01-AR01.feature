@@ -1,7 +1,7 @@
 @CCC.Core @CCC.Core.CN01 @tlp-amber @tlp-green @tlp-red
 Feature: CCC.Core.CN01.AR01
   As a security administrator
-  I want to ensure all SSH network traffic uses TLS 1.3 or higher
+  I want to ensure all non-SSH network traffic uses TLS 1.3 or higher
   So that data integrity and confidentiality are protected during transmission
 
   Background:
@@ -20,6 +20,7 @@ Feature: CCC.Core.CN01.AR01
   Scenario: Service rejects TLS 1.2 traffic
     Given an openssl s_client request using "tls1_2" to "{port-number}" on "{host-name}" protocol "{protocol}"
     And I refer to "{result}" as "connection"
+    # Timing-sensitive: the DSL has no wait-until/poll step, so a slow rejection may still be open after a fixed 40 ms wait.
     And we wait for a period of "40" ms
     Then "{connection.State}" is "closed"
 
@@ -27,6 +28,7 @@ Feature: CCC.Core.CN01.AR01
   Scenario: Service rejects TLS 1.1 traffic
     Given an openssl s_client request using "tls1_1" to "{port-number}" on "{host-name}" protocol "{protocol}"
     And I refer to "{result}" as "connection"
+    # Timing-sensitive: the DSL has no wait-until/poll step, so a slow rejection may still be open after a fixed 40 ms wait.
     And we wait for a period of "40" ms
     Then "{connection.State}" is "closed"
 
@@ -34,6 +36,7 @@ Feature: CCC.Core.CN01.AR01
   Scenario: Service rejects TLS 1.0 traffic
     Given an openssl s_client request using "tls1" to "{port-number}" on "{host-name}" protocol "{protocol}"
     And I refer to "{result}" as "connection"
+    # Timing-sensitive: the DSL has no wait-until/poll step, so a slow rejection may still be open after a fixed 40 ms wait.
     And we wait for a period of "40" ms
     Then "{connection.State}" is "closed"
 

@@ -48,7 +48,7 @@ Feature: CCC.Core.CN01.AR03
     all exposed ports use TLS/SSL or other encryption.
 
     Given "report" contains details of SSL Support type "protocols" for "{host-name}" on port "{port-number}"
+    # TLS1_2 is intentionally not expected here: CCC.Core.CN01.AR01 requires TLS 1.3 or higher, so TLS 1.2 must not be offered.
     Then "{report}" is an array of objects with at least the following contents
       | id     | severity |
-      | TLS1_2 | OK       |
       | TLS1_3 | OK       |
