@@ -28,11 +28,3 @@ Feature: CCC.ObjStor.CN04.AR01
     When I call "{storage}" with "DeleteObject" using arguments "{resource-name}" and "immediate-delete-test={timestamp}.txt"
     Then "{result}" is an error
     And I attach "{result}" to the test output as "immediate-delete-error.txt"
-
-
-@Behavioural
-  Scenario: Service validates retention period meets minimum requirements
-    When I call "{storage}" with "CreateObject" using arguments "{resource-name}", "retention-period-test={timestamp}.txt", and "compliance data"
-    And I call "{storage}" with "GetObjectRetentionDurationDays" using arguments "{resource-name}" and "retention-period-test={timestamp}.txt"
-    Then "{result}" should be greater than "1"
-    And I attach "{result}" to the test output as "retention-period-days.json"

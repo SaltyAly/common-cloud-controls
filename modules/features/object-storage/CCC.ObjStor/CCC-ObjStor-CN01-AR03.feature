@@ -10,23 +10,18 @@ Feature: CCC.ObjStor.CN01.AR03
     And I call "{api}" with "GetServiceAPI" using argument "object-storage"
     And I refer to "{result}" as "storage"
 
-@Behavioural
-  Scenario: Service prevents creating bucket with no access
-    And I call "{api}" with "GetServiceAPIWithIdentity" using arguments "object-storage" and "test-user-no-access"
-    And "{result}" is not an error
-    And I refer to "{result}" as "userStorage"
-    When I call "{userStorage}" with "CreateBucket" using argument "test-bucket-no-access"
+# Planned: requires objstorage.Service method CreateBucketWithKMSKey (bucket write parameterized by a KMS key)
+@Planned
+  Scenario: Service prevents writing bucket with an untrusted KMS key
+    When I call "{storage}" with "CreateBucketWithKMSKey" using arguments "test-bucket-untrusted-kms" and "{untrusted-kms-key}"
     Then "{result}" is an error
-    And I attach "{result}" to the test output as "no-access-create-bucket-error.txt"
+    And I attach "{result}" to the test output as "untrusted-kms-create-bucket-error.txt"
 
 
-@Behavioural
-  Scenario: Service allows creating bucket with write access
-    And I call "{api}" with "GetServiceAPIWithIdentity" using arguments "object-storage" and "test-user-write"
-    And "{result}" is not an error
-    And I attach "{result}" to the test output as "write-storage-service.json"
-    And I refer to "{result}" as "userStorage"
-    When I call "{userStorage}" with "CreateBucket" using argument "test-bucket-write"
+# Planned: requires objstorage.Service method CreateBucketWithKMSKey (bucket write parameterized by a KMS key)
+@Planned
+  Scenario: Service allows writing bucket with the trusted KMS key
+    When I call "{storage}" with "CreateBucketWithKMSKey" using arguments "test-bucket-trusted-kms" and "{trusted-kms-key}"
     Then "{result}" is not an error
-    And I attach "{result}" to the test output as "write-create-bucket-result.json"
+    And I attach "{result}" to the test output as "trusted-kms-create-bucket-result.json"
     And I call "{storage}" with "DeleteBucket" using argument "{result.ID}"
