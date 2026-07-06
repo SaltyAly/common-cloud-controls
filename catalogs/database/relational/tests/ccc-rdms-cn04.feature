@@ -2,7 +2,7 @@
 Feature: Access control for backup and restore operations
 
 """
-This feature verifies that backup and restore operations can only be initiated by identities explicitly authorized for backup/restore functions, and that unauthorized attempts fail with an access denied message.
+This feature verifies that backup and restore operations can only be initiated by identities explicitly authorized for backup/restore functions. It also verifies that unauthorized attempts fail with an access denied message.
 """
 
 @CCC.RDMS.CN04.AR01.TE01

@@ -2,7 +2,7 @@
 Feature: Default vendor-supplied database credentials must not grant access
 
 """
-This feature verifies that default vendor-supplied administrator credentials have been replaced and cannot be used to authenticate to the database, while properly managed replacement credentials continue to grant access.
+This feature verifies that default vendor-supplied administrator credentials cannot be used to authenticate to the database. It also verifies that properly managed replacement credentials continue to grant access.
 """
 
 @CCC.RDMS.CN01.AR02.TE01
