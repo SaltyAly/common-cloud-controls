@@ -2,7 +2,12 @@
 Feature: CCC.ObjStor.CN07.AR03
   As a security administrator
   I want every object deletion attempt to be recorded in the audit logs
-  So that deletion activity is fully auditable, including whether MFA was required and satisfied
+  So that deletion activity is fully auditable
+
+# Each recorded deletion attempt must indicate whether MFA was required for the request.
+# Each recorded deletion attempt must indicate whether MFA validation was satisfied for the request.
+# The logging DSL's LogEntry does not yet expose MFA attributes, so neither outcome is independently
+# assessable today; the scenario below verifies that deletion attempts are recorded in the audit logs.
 
 
   Background:
