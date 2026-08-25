@@ -3,8 +3,7 @@ import Link from "@docusaurus/Link";
 import { useLocation } from "@docusaurus/router";
 import { usePluginData } from "@docusaurus/useGlobalData";
 import { prettifySegment, labelFromTitle } from "@site/src/content/catalogUtils";
-import type { CatalogTypeIndexData } from "./CatalogTypeOverviewPage";
-import "./CatalogSidebar.css";
+import styles from "./CatalogSidebar.module.css";
 
 interface Service {
   slug: string;
@@ -24,7 +23,7 @@ interface RawStructureEntry {
 }
 
 const HREF_OVERRIDES: Record<string, string> = {
-  "core/ccc": "/catalogs/core",
+  "core/core": "/catalogs/core/core",
 };
 
 function buildCatalogStructure(raw: RawStructureEntry[]): Category[] {
@@ -39,64 +38,39 @@ function buildCatalogStructure(raw: RawStructureEntry[]): Category[] {
   }));
 }
 
-const TYPE_TITLE: Record<string, string> = {
-  capabilities: "Capabilities",
-  threats: "Threats",
-  controls: "Controls",
-};
-
-interface CatalogSidebarProps {
-  typeIndexData?: CatalogTypeIndexData;
-}
-
-export const CatalogSidebar: React.FC<CatalogSidebarProps> = ({ typeIndexData }) => {
+export const CatalogSidebar: React.FC = () => {
   const { pathname } = useLocation();
   const pluginData = usePluginData("catalog-routes") as { catalogStructure?: RawStructureEntry[] } | undefined;
   const catalogStructure = buildCatalogStructure(pluginData?.catalogStructure ?? []);
-
-  const typeLinkMap = typeIndexData
-    ? new Map(typeIndexData.serviceEntries.map((e) => [`${e.category}/${e.service}`, e.typePath]))
-    : null;
-
-  const title = typeIndexData
-    ? (TYPE_TITLE[typeIndexData.type] ?? typeIndexData.type.charAt(0).toUpperCase() + typeIndexData.type.slice(1))
-    : null;
 
   const isActive = (path: string) =>
     pathname === path || pathname.startsWith(path + "/");
 
   return (
-    <nav className="catalog-sidebar">
-      {title && <div className="catalog-sidebar-type-title">{title}</div>}
+    <nav className={styles.sidebar}>
+      <div className={styles.typeTitle}>Catalogs</div>
       {catalogStructure.map(({ slug, label, services }) => {
-        const visibleServices = typeLinkMap
-          ? services.filter((svc) => typeLinkMap.has(`${slug}/${svc.slug}`))
-          : services;
+        if (services.length === 0) return null;
 
-        if (visibleServices.length === 0) return null;
-
-        const categoryActive = visibleServices.some(({ slug: svc, href }) => {
-          const path = typeLinkMap?.get(`${slug}/${svc}`) ?? href ?? `/catalogs/${slug}/${svc}`;
+        const categoryActive = services.some(({ slug: svc, href }) => {
+          const path = href ?? `/catalogs/${slug}/${svc}`;
           return isActive(path);
         });
 
         return (
           <details key={slug} open={categoryActive}>
-            <summary className={categoryActive ? "category-active" : ""}>
+            <summary className={categoryActive ? styles.categoryActive : undefined}>
               <span>{label}</span>
-              <span className="chevron">▾</span>
+              <span className={styles.chevron}>▾</span>
             </summary>
-            <div className="service-links">
-              {visibleServices.map(({ slug: svcSlug, label: svcLabel, href }) => {
-                const path =
-                  typeLinkMap?.get(`${slug}/${svcSlug}`) ??
-                  href ??
-                  `/catalogs/${slug}/${svcSlug}`;
+            <div className={styles.serviceLinks}>
+              {services.map(({ slug: svcSlug, label: svcLabel, href }) => {
+                const path = href ?? `/catalogs/${slug}/${svcSlug}`;
                 return (
                   <Link
                     key={svcSlug}
                     to={path}
-                    className={`sidebar-service-link${isActive(path) ? " active" : ""}`}
+                    className={`${styles.serviceLink}${isActive(path) ? ` ${styles.active}` : ""}`}
                   >
                     {svcLabel}
                   </Link>

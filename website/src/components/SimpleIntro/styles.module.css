@@ -69,6 +69,14 @@ html[data-theme=dark] .cta {
 
 .button:hover {
 	text-decoration: none;
+	color: var(--gf-color-text-subtle);
+}
+
+.catalogPreview{
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	color: var(--gf-color-accent);
 }
 
 @media screen and (max-width: 600px) {

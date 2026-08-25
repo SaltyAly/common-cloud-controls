@@ -1,43 +1,23 @@
 import React from "react";
+import PageSidebar, { TOCItem } from "../PageSidebar";
+import styles from "./index.module.css";
 
 interface ContentPageProps {
   subtitle?: string;
   title: string;
+  toc?: readonly TOCItem[];
   children: React.ReactNode;
 }
 
-export default function ContentPage({ subtitle, title, children }: ContentPageProps) {
+export default function ContentPage({ subtitle, title, toc, children }: ContentPageProps) {
   return (
     <main>
       <div className="page-layout">
-        <article style={{ flex: 1, minWidth: 0 }}>
-          {subtitle && (
-            <p
-              style={{
-                margin: "0 0 0.35rem",
-                color: "var(--gf-color-text-subtle)",
-                fontSize: "1rem",
-                lineHeight: 1.5,
-              }}
-            >
-              {subtitle}
-            </p>
-          )}
-          <h1
-            className="page-h1"
-            style={{ margin: 0, fontSize: "2rem", fontWeight: 700 }}
-          >
-            {title}
-          </h1>
-          <div
-            className="library-article-body"
-            style={{
-              color: "var(--gf-color-text)",
-              lineHeight: 1.8,
-              fontSize: "1.05rem",
-              marginTop: "1.5rem",
-            }}
-          >
+        {toc && toc.length > 0 && <PageSidebar toc={toc} title={title} />}
+        <article className={styles.article}>
+          {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+          <h1 id="page-title" className={`${styles.pageTitle}${subtitle ? ` ${styles.pageTitleWithSubtitle}` : ""}`}>{title}</h1>
+          <div className={`library-article-body ${styles.body}`}>
             {children}
           </div>
         </article>
