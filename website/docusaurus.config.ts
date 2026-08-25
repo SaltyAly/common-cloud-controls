@@ -64,18 +64,9 @@ const config: Config = {
       },
       items: [
         { to: '/about', label: 'About', position: 'right' },
+        { to: '/users', label: 'User Journey', position: 'right' },
         { to: '/architecture', label: 'Architecture', position: 'right' },
-        {
-          label: "Catalogs",
-          to: "/catalogs",
-          position: "right",
-          type: "dropdown",
-          items: [
-            { to: "/threats", label: "Threats" },
-            { to: "/controls", label: "Controls" },
-            { to: "/capabilities", label: "Capabilities" },
-          ],
-        },
+        { to: "/catalogs", label: "Catalogs", position: "right" },
         {
           label: 'Ecosystem',
           to: '/ecosystems',
@@ -122,6 +113,10 @@ const config: Config = {
         {
           label: "About",
           to: "/about",
+        },
+        { 
+          label: 'User Journey',
+          to: '/users'
         },
         {
           label: "Architecture",

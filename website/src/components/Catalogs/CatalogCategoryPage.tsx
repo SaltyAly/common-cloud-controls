@@ -6,6 +6,9 @@ import { CatalogSidebar } from "./CatalogSidebar";
 import { markdownComponents } from "./markdownComponents";
 import { prettifySegment, labelFromTitle } from "@site/src/content/catalogUtils";
 import { User } from "../shared/User";
+import styles from "./CatalogCategoryPage.module.css";
+import catalogStyles from "./catalog.module.css";
+import { ContributeCard } from "./ContributeCard";
 
 export interface CatalogContributor {
   name: string;
@@ -23,9 +26,26 @@ export interface CatalogReleaseSummary {
   typePaths: { capabilities?: string; threats?: string; controls?: string };
 }
 
+export interface CatalogCspService {
+  provider: string;
+  service: string;
+  url: string;
+}
+
+export interface CatalogMappingReference {
+  id: string;
+  title: string;
+  version?: string;
+  description?: string;
+  url?: string;
+}
+
 export interface CatalogServiceInfo {
   slug: string;
   title?: string;
+  description?: string;
+  exampleCspServices?: CatalogCspService[];
+  mappingReferences?: CatalogMappingReference[];
   types: Array<{ type: string; typePath: string }>;
   releases: CatalogReleaseSummary[];
 }
@@ -57,15 +77,15 @@ function getServiceLabel(_category: string, service: string, title?: string): st
 
 function TypeButtons({ svcInfo }: { svcInfo: CatalogServiceInfo }) {
   return (
-    <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+    <div className={styles.typeButtonsRow}>
       {TYPE_ORDER.map((type) => {
         const entry = svcInfo.types.find((t) => t.type === type);
         return entry ? (
-          <Link key={type} to={entry.typePath} className="catalog-type-btn">
+          <Link key={type} to={entry.typePath} className={catalogStyles.typeBtn}>
             {TYPE_LABELS[type]}
           </Link>
         ) : (
-          <span key={type} className="catalog-type-btn--disabled">
+          <span key={type} className={catalogStyles.typeBtnDisabled}>
             {TYPE_LABELS[type]}
           </span>
         );
@@ -77,7 +97,7 @@ function TypeButtons({ svcInfo }: { svcInfo: CatalogServiceInfo }) {
 function ReleasesTable({ releases }: { releases: CatalogReleaseSummary[] }) {
   if (!releases.length) return null;
   return (
-    <div className="library-article-body" style={{ marginTop: "1.5rem" }}>
+    <div className={`library-article-body ${styles.releasesTable}`}>
       <table>
         <thead>
           <tr>
@@ -96,7 +116,7 @@ function ReleasesTable({ releases }: { releases: CatalogReleaseSummary[] }) {
               <td>{release.releaseManager?.name ? <User contributor={release.releaseManager} /> : "Development Team"}</td>
               <td>
                 {release.contributors?.length ? (
-                  <div className="flex flex-col gap-2">
+                  <div className={styles.contributorsList}>
                     {release.contributors.map((c, i) => (
                       <User key={i} contributor={c} />
                     ))}
@@ -126,94 +146,145 @@ export const CatalogCategoryPage: React.FC<Props> = ({ data, service }) => {
       .then((md) => setDescBody(md.replace(/^---[\s\S]*?---\n?/, "")));
   }, [category]);
 
-  // Service-level view: single service, show its type buttons
   if (service) {
     const svcInfo = services.find((s) => s.slug === service);
     return (
       <div className="page-layout">
         <CatalogSidebar />
-        <article style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ margin: "0 0 0.25rem", color: "var(--ifm-color-emphasis-600)", fontSize: "0.9rem" }}>
-            {getCategoryLabel(category)}
-          </p>
-          <h1 style={{ fontSize: "2.5rem", fontWeight: 700, marginBottom: "1.5rem", marginTop: 0, color: "var(--gf-color-accent)", lineHeight: 1.2 }}>
-            {getServiceLabel(category, service, svcInfo?.title)}
-          </h1>
+        <article className={styles.main}>
+          <p className={styles.categoryLabel}>{getCategoryLabel(category)}</p>
+          <h1 className={styles.pageTitle}>{getServiceLabel(category, service, svcInfo?.title)}</h1>
           {svcInfo ? (
             <>
               <TypeButtons svcInfo={svcInfo} />
+              {svcInfo.description && (
+                <p style={{ fontSize: "1.05rem", lineHeight: 1.8, color: "var(--gf-color-text)", marginTop: "1.5rem", marginBottom: "1.5rem" }}>
+                  {svcInfo.description}
+                </p>
+              )}
+              {svcInfo.exampleCspServices && svcInfo.exampleCspServices.length > 0 && (
+                <div style={{ marginBottom: "1.5rem" }}>
+                  <h2 style={{ fontSize: "1.1rem", fontWeight: 600, marginBottom: "0.75rem", color: "var(--gf-color-accent-strong)", textAlign: "left" }}>
+                    Cloud Provider Equivalents
+                  </h2>
+                  <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", justifyContent: "flex-start" }}>
+                    {svcInfo.exampleCspServices.map((csp) => (
+                      <a
+                        key={csp.provider}
+                        href={csp.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          padding: "0.75rem 1rem",
+                          border: "1px solid rgba(0,134,191,0.25)",
+                          borderRadius: "8px",
+                          background: "var(--gf-color-surface)",
+                          textDecoration: "none",
+                          minWidth: "160px",
+                        }}
+                      >
+                        <span style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--gf-color-text-subtle)", marginBottom: "0.25rem" }}>
+                          {csp.provider}
+                        </span>
+                        <span style={{ fontSize: "0.9rem", fontWeight: 600, color: "var(--gf-color-accent)" }}>
+                          {csp.service}
+                        </span>
+                        <span style={{ fontSize: "0.75rem", color: "var(--gf-color-text-subtle)", marginTop: "0.25rem" }}>
+                          View docs →
+                        </span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
               <ReleasesTable releases={svcInfo.releases} />
+              {svcInfo.mappingReferences && svcInfo.mappingReferences.length > 0 && (
+                <div style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }}>
+                  <h2 style={{ fontSize: "1.1rem", fontWeight: 600, marginBottom: "0.75rem", color: "var(--gf-color-accent-strong)", textAlign: "left" }}>
+                    Mapping References
+                  </h2>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                    {svcInfo.mappingReferences.map((ref) => (
+                      <div
+                        key={ref.id}
+                        style={{
+                          padding: "0.75rem 1rem",
+                          border: "1px solid rgba(0,134,191,0.25)",
+                          borderRadius: "8px",
+                          background: "var(--gf-color-surface)",
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "baseline", gap: "0.5rem", marginBottom: ref.description ? "0.4rem" : 0 }}>
+                          {ref.url ? (
+                            <a href={ref.url} target="_blank" rel="noopener noreferrer" style={{ fontWeight: 600, fontSize: "0.95rem", color: "var(--gf-color-accent)" }}>
+                              {ref.title}
+                            </a>
+                          ) : (
+                            <span style={{ fontWeight: 600, fontSize: "0.95rem", color: "var(--gf-color-accent)" }}>{ref.title}</span>
+                          )}
+                          {ref.version && (
+                            <span style={{ fontSize: "0.75rem", color: "var(--gf-color-text-subtle)" }}>{ref.version}</span>
+                          )}
+                        </div>
+                        {ref.description && (
+                          <p style={{ margin: 0, fontSize: "0.875rem", color: "var(--gf-color-text)", lineHeight: 1.6 }}>
+                            {ref.description}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <ContributeCard body="This catalog is maintained as versioned YAML files. Generated artifacts are published here as each release is cut." />
             </>
           ) : (
-            <p style={{ color: "var(--ifm-color-emphasis-600)" }}>No published catalogs yet.</p>
+            <p className={styles.emptyNote}>No published catalogs yet.</p>
           )}
         </article>
       </div>
     );
   }
 
-  // Category-level view
   const isSingleService = services.length === 1;
-  const isCore = isSingleService && services[0]?.slug === "ccc";
+  const isCore = isSingleService && services[0]?.slug === "core";
 
   return (
     <div className="page-layout">
       <CatalogSidebar />
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <h1 style={{ fontSize: "2.5rem", fontWeight: 700, marginBottom: "1.5rem", lineHeight: 1.2, marginTop: 0 }}>
+      <div className={styles.main}>
+        <h1 className={styles.categoryTitle}>
           {isCore ? "CCC Core Catalog" : getCategoryLabel(category)}
         </h1>
 
-        {/* For single-service categories (core), show type buttons directly */}
         {isSingleService && (
-          <div style={{ marginBottom: "2rem" }}>
+          <div className={styles.typeBtnWrapper}>
             <TypeButtons svcInfo={services[0]} />
           </div>
         )}
 
-        {/* Description body fetched from static content */}
         {descBody.trim() && (
-          <div
-            className="library-article-body"
-            style={{ color: "var(--gf-color-text)", lineHeight: 1.8, fontSize: "1.05rem", marginBottom: "var(--gf-space-xl)" }}
-          >
+          <div className={`library-article-body ${styles.descBody}`}>
             <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
               {descBody}
             </ReactMarkdown>
           </div>
         )}
 
-        {/* For multi-service categories, list each service with its type buttons */}
         {!isSingleService &&
           services.map((svc) => (
-            <div key={svc.slug} style={{ marginBottom: "var(--gf-space-xl)" }}>
-              <h2 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "1rem", lineHeight: 1.3 }}>
+            <div key={svc.slug} className={styles.serviceBlock}>
+              <h2 className={styles.serviceTitle}>
                 {getServiceLabel(category, svc.slug, svc.title)}
               </h2>
               <TypeButtons svcInfo={svc} />
             </div>
           ))}
 
-        {/* Contribute card for core */}
         {isCore && (
-          <div className="surface-card">
-            <div style={{ margin: "1rem 1rem" }}>
-              <h2 style={{ margin: "0 0 1rem", fontSize: "1.25rem", color: "#0086bf" }}>
-                Contribute to the Next Release
-              </h2>
-              <p style={{ margin: "0 0 2rem", color: "#0086bf", fontSize: "1rem", lineHeight: 1.6 }}>
-                The core catalog is maintained as versioned YAML files. Generated artifacts are published here as each release is cut.
-              </p>
-              <a
-                href="https://github.com/finos/common-cloud-controls"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="catalog-type-btn"
-              >
-                View on GitHub →
-              </a>
-            </div>
-          </div>
+          <ContributeCard body="The core catalog is maintained as versioned YAML files. Generated artifacts are published here as each release is cut." />
         )}
       </div>
     </div>
