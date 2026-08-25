@@ -20,4 +20,19 @@ metadata:
       service: Identity and Access Management
       url: https://cloud.google.com/iam/docs
   applicability-categories: []
-  mapping-references: []
+  mapping-references:
+    - id: CCC.Core
+      title: FINOS CCC Core Catalog
+      version: v2025.10
+    - id: NIST-CSF
+      title: NIST Cybersecurity Framework
+      version: "2.0"
+      url: https://www.nist.gov/cyberframework
+    - id: NIST_800_53
+      title: NIST SP 800-53 Security and Privacy Controls
+      version: Rev. 5
+      url: https://csrc.nist.gov/pubs/sp/800/53/r5/upd1/final
+    - id: PCI-DSS
+      title: PCI Data Security Standard
+      version: v4.0.1
+      url: https://www.pcisecuritystandards.org/
