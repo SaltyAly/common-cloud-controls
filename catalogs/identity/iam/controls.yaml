@@ -478,3 +478,96 @@ controls:
           - reference-id: CA-7
             strength: 0 # Not yet specified
           - reference-id: RA-5
+  - id: CCC.IAM.CN16
+    group: Access
+    title: Define Authorization Behavior for All Identity Lifecycle States
+    objective: |
+      Ensure that accounts moving through transient lifecycle states, such as
+      an in-progress multi-factor challenge, a credential reset in flight, a
+      pending deletion, or an administrative suspension, produce defined and
+      deterministic outcomes for every credential and authorization operation.
+      This prevents the service from failing open during a state that should
+      block issuance, and prevents relying parties from mistaking a temporary
+      condition for a permanent revocation.
+    assessment-requirements:
+      - id: CCC.IAM.CN16.AR01
+        text: |
+          When a credential or authorization operation is attempted against an
+          account in a documented lifecycle state, the service MUST return the
+          response defined for that combination of state and operation.
+        applicability:
+          - tlp-clear
+          - tlp-green
+          - tlp-amber
+          - tlp-red
+        recommendation: |
+          Maintain a matrix of lifecycle states against credential and
+          authorization operations in which every combination has an explicit,
+          reviewed outcome. Treat any undefined combination as a release
+          blocker for changes that introduce new states or operations.
+      - id: CCC.IAM.CN16.AR02
+        text: |
+          When a credential or authorization operation is attempted against an
+          account in a lifecycle state with no defined response, the service
+          MUST deny the operation.
+        applicability:
+          - tlp-clear
+          - tlp-green
+          - tlp-amber
+          - tlp-red
+        recommendation: ""
+      - id: CCC.IAM.CN16.AR03
+        text: |
+          When a credential or authorization operation is denied because the
+          account is in a transient lifecycle state, the response MUST be
+          distinguishable from a permanent revocation of the underlying grant.
+        applicability:
+          - tlp-clear
+          - tlp-green
+          - tlp-amber
+          - tlp-red
+        recommendation: |
+          Return a distinct error code or a retry indication for transient
+          conditions. Reusing a single error for both a temporarily suspended
+          account and a permanently revoked grant leads relying parties to
+          delete valid links and local authorization state.
+      - id: CCC.IAM.CN16.AR04
+        text: |
+          When an account enters a transient lifecycle state, the service MUST
+          NOT emit a revocation signal for the account's existing
+          authorization grants.
+        applicability:
+          - tlp-clear
+          - tlp-green
+          - tlp-amber
+          - tlp-red
+        recommendation: |
+          If relying parties require notification, emit a distinct suspension
+          or hold event so that downstream systems can pause activity without
+          discarding the underlying grant.
+      - id: CCC.IAM.CN16.AR05
+        text: |
+          When an account returns to an active lifecycle state, authorization
+          grants that were not explicitly revoked MUST remain valid.
+        applicability:
+          - tlp-clear
+          - tlp-green
+          - tlp-amber
+          - tlp-red
+        recommendation: ""
+    threats:
+      - reference-id: CCC
+        entries:
+          - reference-id: CCC.IAM.TH13
+            strength: 0 # Not yet specified
+            remarks: Undefined Handling of Identity Lifecycle States
+          - reference-id: CCC.IAM.TH01
+            strength: 0 # Not yet specified
+            remarks: Valid Cloud Credentials Abuse
+    guidelines:
+      - reference-id: NIST-CSF
+        entries:
+          - reference-id: PR.AA-01
+      - reference-id: NIST_800_53
+        entries:
+          - reference-id: AC-2
