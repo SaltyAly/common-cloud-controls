@@ -48,6 +48,30 @@
 - All open branches merged with synced main 2026-08-24; PRs report
   MERGEABLE/CLEAN.
 
+### Addendum — late 2026-08-24
+
+- **PR #5 `feat/iam-lifecycle-states` (OPEN, queued):** new threat
+  CCC.IAM.TH13 (undefined handling of identity lifecycle states) + control
+  CCC.IAM.CN16 (define authorization behavior for all identity lifecycle
+  states; 5 ARs: defined state×operation responses, fail-closed on undefined
+  states, transient denials distinguishable from permanent revocation, no
+  revocation signal on state entry, grant survival across restoration) +
+  TH13→T1078.004 MappingDocument entry. Branch cut from finos baseline
+  `9bda372`; **PR base is the new `finos-baseline` branch** (= finos main @
+  `9bda372`) so the fork PR diff equals the future upstream diff exactly.
+  Both CI gates pre-flighted locally: PASS. IDs CN16/TH13 sit after PR #4's
+  CN12–CN15; renumber if those shift in review. Sequenced after the PR #4
+  preview.
+- **Branch `feat/iam-credential-decay` (pushed, PR intentionally not
+  opened):** extends accepted CN08 with AR02 (reactivation after dormancy
+  requires initial-provisioning-level identity assurance) and AR03
+  (authorization-gating attributes re-evaluated before restoring access).
+  Cut from `9bda372`; both CI gates PASS locally (`a5f4dd5`). Held to keep
+  the review queue at two items; open after the current previews move.
+- Reusable pattern: `finos-baseline` branch pinned at the sync point gives
+  every future preview PR an upstream-identical diff without fork-lineage
+  noise.
+
 ## CI pre-flight (2026-08-24, local)
 
 - Gemara gate replicated exactly (compile + `cue vet` v1.2.0): **PASS** for
