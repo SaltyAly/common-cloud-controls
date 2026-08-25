@@ -146,19 +146,20 @@ controls:
         text: |
           When a trust policy grants a third-party or cross-account principal
           permission to assume a role or impersonate a service identity, the
-          policy MUST include a condition constraint (e.g., an external ID or
-          audience restriction) that uniquely binds the trust to the intended
-          delegating party.
+          policy MUST include a condition constraint that uniquely binds the
+          trust to the intended delegating party.
         applicability:
           - tlp-green
           - tlp-amber
           - tlp-red
         recommendation: |
-          Require a unique, secret condition value for every third-party trust
-          relationship (e.g., AWS sts:ExternalId, GCP workload identity federation
-          audience, Azure federated credential subject and audience). This prevents
-          a confused deputy scenario in which a legitimate third-party service is
-          tricked into using its trusted access on behalf of another customer.
+          Suitable condition constraints include an external ID or an audience
+          restriction. Require a unique, secret condition value for every
+          third-party trust relationship (e.g., AWS sts:ExternalId, GCP workload
+          identity federation audience, Azure federated credential subject and
+          audience). This prevents a confused deputy scenario in which a
+          legitimate third-party service is tricked into using its trusted
+          access on behalf of another customer.
     threats:
       - reference-id: CCC
         entries:
@@ -513,9 +514,7 @@ controls:
       - id: CCC.IAM.CN12.AR01
         text: |
           When a consent form is presented to a user, the form MUST display
-          every scope present in the backend authorization request, AND the
-          front-end copy shown for each scope MUST match the registered
-          description of the corresponding backend scope identifier.
+          every scope present in the backend authorization request.
         applicability:
           - tlp-clear
           - tlp-green
@@ -523,6 +522,17 @@ controls:
           - tlp-red
         recommendation: ""
       - id: CCC.IAM.CN12.AR02
+        text: |
+          When a consent form is presented to a user, the front-end copy
+          shown for each displayed scope MUST match the registered
+          description of the corresponding backend scope identifier.
+        applicability:
+          - tlp-clear
+          - tlp-green
+          - tlp-amber
+          - tlp-red
+        recommendation: ""
+      - id: CCC.IAM.CN12.AR03
         text: |
           When a consent form is presented to a user, the form MUST NOT
           display any permission, scope, or data-access description that
@@ -534,18 +544,29 @@ controls:
           - tlp-amber
           - tlp-red
         recommendation: ""
-      - id: CCC.IAM.CN12.AR03
+      - id: CCC.IAM.CN12.AR04
         text: |
           When the front-end copy for a requested scope cannot be resolved,
           or does not match the backend scopes data, the service MUST NOT
-          present the consent form AND MUST deny the authorization request.
+          present the consent form.
         applicability:
           - tlp-clear
           - tlp-green
           - tlp-amber
           - tlp-red
         recommendation: ""
-      - id: CCC.IAM.CN12.AR04
+      - id: CCC.IAM.CN12.AR05
+        text: |
+          When the front-end copy for a requested scope cannot be resolved,
+          or does not match the backend scopes data, the service MUST deny
+          the authorization request.
+        applicability:
+          - tlp-clear
+          - tlp-green
+          - tlp-amber
+          - tlp-red
+        recommendation: ""
+      - id: CCC.IAM.CN12.AR06
         text: |
           When a user approves a consent form, the service MUST NOT issue a
           grant or credential containing scopes that were not displayed on
@@ -596,8 +617,7 @@ controls:
         text: |
           When an authorization grant or consent is revoked, the revoked state
           MUST be propagated to all dependent systems and relying parties within
-          24 hours, AND the recorded consent state MUST NOT diverge between the
-          service and any relying party beyond that period.
+          24 hours.
         applicability:
           - tlp-clear
           - tlp-green
@@ -606,21 +626,42 @@ controls:
         recommendation: |
           Attach a correlation identifier to each revocation event so its delivery
           can be traced end to end across emitting, queueing, and receiving systems.
-          Verify bidirectional convergence: a revocation initiated on either side
-          must result in both sides reaching a consistent revoked state.
       - id: CCC.IAM.CN13.AR03
         text: |
+          When an authorization grant or consent is revoked, the recorded
+          consent state MUST NOT diverge between the service and any relying
+          party beyond the 24-hour propagation period.
+        applicability:
+          - tlp-clear
+          - tlp-green
+          - tlp-amber
+          - tlp-red
+        recommendation: |
+          Verify bidirectional convergence: a revocation initiated on either side
+          must result in both sides reaching a consistent revoked state.
+      - id: CCC.IAM.CN13.AR04
+        text: |
           When delivery of a revocation event to a dependent system fails, the
-          failure MUST be logged AND an alert MUST be generated for undelivered
-          events that exceed the propagation deadline.
+          failure MUST be logged.
         applicability:
           - tlp-green
           - tlp-amber
           - tlp-red
         recommendation: |
-          Route undeliverable revocation events to a dead-letter queue with an
-          alarm on queue depth, and periodically drain and replay the queue to
-          confirm that downstream consent state converges after an outage.
+          Route undeliverable revocation events to a dead-letter queue, and
+          periodically drain and replay the queue to confirm that downstream
+          consent state converges after an outage.
+      - id: CCC.IAM.CN13.AR05
+        text: |
+          When an undelivered revocation event exceeds the propagation
+          deadline, an alert MUST be generated.
+        applicability:
+          - tlp-green
+          - tlp-amber
+          - tlp-red
+        recommendation: |
+          Alarm on dead-letter queue depth so that undelivered revocation
+          events are surfaced before the propagation deadline is exceeded.
     threats:
       - reference-id: CCC
         entries:
@@ -700,8 +741,7 @@ controls:
         text: |
           When an identity policy grants a principal permission to pass a role
           or attach a service identity to a resource, the permission MUST be
-          restricted to explicitly enumerated roles or service identities and
-          MUST NOT use a wildcard.
+          restricted to explicitly enumerated roles or service identities.
         applicability:
           - tlp-clear
           - tlp-green
@@ -709,6 +749,17 @@ controls:
           - tlp-red
         recommendation: ""
       - id: CCC.IAM.CN15.AR02
+        text: |
+          When an identity policy grants a principal permission to pass a role
+          or attach a service identity to a resource, the permission MUST NOT
+          use a wildcard to identify the permitted roles or service identities.
+        applicability:
+          - tlp-clear
+          - tlp-green
+          - tlp-amber
+          - tlp-red
+        recommendation: ""
+      - id: CCC.IAM.CN15.AR03
         text: |
           When a principal attempts to pass a role or attach a service identity
           that it has not been explicitly granted permission to use, the service
