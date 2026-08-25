@@ -11,22 +11,17 @@ Feature: CCC.ObjStor.CN01.AR04
     And I refer to "{result}" as "storage"
     And "{result}" is not an error
 
-@Behavioural
-  Scenario: Service prevents writing object with read-only access
-    And I call "{api}" with "GetServiceAPIWithIdentity" using arguments "object-storage" and "test-user-read"
-    And "{result}" is not an error
-    And I refer to "{result}" as "userStorage"
-    When I call "{userStorage}" with "CreateObject" using arguments "{resource-name}", "test-write-object={timestamp}.txt", and "test content"
+# Planned: requires objstorage.Service method CreateObjectWithKMSKey (object write parameterized by a KMS key)
+@Planned
+  Scenario: Service prevents writing object with an untrusted KMS key
+    When I call "{storage}" with "CreateObjectWithKMSKey" using arguments "{resource-name}", "test-write-object={timestamp}.txt", "test content", and "{untrusted-kms-key}"
     Then "{result}" is an error
-    And I attach "{result}" to the test output as "read-create-object-error.txt"
+    And I attach "{result}" to the test output as "untrusted-kms-create-object-error.txt"
 
 
-@Behavioural
-  Scenario: Service allows writing object with write access
-    And I call "{api}" with "GetServiceAPIWithIdentity" using arguments "object-storage" and "test-user-write"
-    And "{result}" is not an error
-    And I attach "{result}" to the test output as "write-storage-service.json"
-    And I refer to "{result}" as "userStorage"
-    When I call "{userStorage}" with "CreateObject" using arguments "{resource-name}", "test-write-object={timestamp}.txt", and "test content"
+# Planned: requires objstorage.Service method CreateObjectWithKMSKey (object write parameterized by a KMS key)
+@Planned
+  Scenario: Service allows writing object with the trusted KMS key
+    When I call "{storage}" with "CreateObjectWithKMSKey" using arguments "{resource-name}", "test-write-object={timestamp}.txt", "test content", and "{trusted-kms-key}"
     Then "{result}" is not an error
-    And I attach "{result}" to the test output as "write-create-object-result.json"
+    And I attach "{result}" to the test output as "trusted-kms-create-object-result.json"

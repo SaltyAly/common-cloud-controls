@@ -12,22 +12,17 @@ Feature: CCC.ObjStor.CN01.AR02
     And I call "{storage}" with "CreateObject" using arguments "{resource-name}", "test-object={timestamp}.txt", and "test content"
     And "{result}" is not an error
 
-@Behavioural
-  Scenario: Service prevents reading object with no access
-    And I call "{api}" with "GetServiceAPIWithIdentity" using arguments "object-storage" and "test-user-no-access"
-    And "{result}" is not an error
-    And I refer to "{result}" as "userStorage"
-    When I call "{userStorage}" with "ReadObject" using arguments "{resource-name}" and "test-object={timestamp}.txt"
+# Planned: requires objstorage.Service method ReadObjectWithKMSKey (object read parameterized by a KMS key)
+@Planned
+  Scenario: Service prevents reading object with an untrusted KMS key
+    When I call "{storage}" with "ReadObjectWithKMSKey" using arguments "{resource-name}", "test-object={timestamp}.txt", and "{untrusted-kms-key}"
     Then "{result}" is an error
-    And I attach "{result}" to the test output as "no-access-read-object-error.txt"
+    And I attach "{result}" to the test output as "untrusted-kms-read-object-error.txt"
 
 
-@Behavioural
-  Scenario: Service allows reading object with read access
-    And I call "{api}" with "GetServiceAPIWithIdentity" using arguments "object-storage" and "test-user-read"
-    And "{result}" is not an error
-    And I attach "{result}" to the test output as "read-storage-service.json"
-    And I refer to "{result}" as "userStorage"
-    When I call "{userStorage}" with "ReadObject" using arguments "{resource-name}" and "test-object={timestamp}.txt"
+# Planned: requires objstorage.Service method ReadObjectWithKMSKey (object read parameterized by a KMS key)
+@Planned
+  Scenario: Service allows reading object with the trusted KMS key
+    When I call "{storage}" with "ReadObjectWithKMSKey" using arguments "{resource-name}", "test-object={timestamp}.txt", and "{trusted-kms-key}"
     Then "{result}" is not an error
-    And I attach "{result}" to the test output as "read-read-object-result.json"
+    And I attach "{result}" to the test output as "trusted-kms-read-object-result.json"

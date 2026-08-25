@@ -11,7 +11,7 @@ Feature: CCC.ObjStor.CN05.AR03 - Recovery of Previous Versions
     And I refer to "{result}" as "storage"
 
 @Behavioural
-  Scenario: Modified objects receive new version identifiers
+  Scenario: Previous object versions are recoverable by version ID
     When I call "{storage}" with "CreateObject" using arguments "{resource-name}", "version-test-object={timestamp}.txt", and "original content"
     And I refer to "{result.VersionID}" as "version1"
     And I call "{storage}" with "CreateObject" using arguments "{resource-name}", "version-test-object={timestamp}.txt", and "modified content"

@@ -16,8 +16,8 @@ Feature: CCC.Core.CN08.AR01 - Data Replication and Redundancy
     And I refer to "{result}" as "replicationStatus"
     And I refer to "{replicationStatus.Locations}" as "locations"
     And I attach "{replicationStatus}" to the test output as "Replication Status"
-    Then "{locations}" is an array of objects with length "2"
-    And "{permitted-regions}" is an array of objects with at least the following contents
+    # The control requires >= 2 locations; the DSL only has an exact-length step, and the two membership checks below already require locations[0] and locations[1] to exist within permitted regions.
+    Then "{permitted-regions}" is an array of objects with at least the following contents
       | value           |
       | {locations[0]}  |
     And "{permitted-regions}" is an array of objects with at least the following contents
