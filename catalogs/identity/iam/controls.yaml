@@ -335,6 +335,37 @@ controls:
         recommendation: |
           IAM user credentials (such as passwords or access keys) that have not been used
           for 90 days or more must be automatically removed or deactivated.
+      - id: CCC.IAM.CN08.AR02
+        text: |
+          When credentials that were deactivated for dormancy are reactivated,
+          the service MUST verify the identity of the requesting user with at
+          least the assurance required at initial credential provisioning.
+        applicability:
+          - tlp-clear
+          - tlp-green
+          - tlp-amber
+          - tlp-red
+        recommendation: |
+          Dormant accounts are attractive takeover targets because their
+          legitimate owners are absent and anomalies are less likely to be
+          noticed. A recovery path for dormant credentials that is weaker than
+          initial provisioning undermines the benefit of deactivating them.
+      - id: CCC.IAM.CN08.AR03
+        text: |
+          When credentials that were deactivated for dormancy are reactivated,
+          identity attributes that condition authorization MUST be re-evaluated
+          before previously held access is restored.
+        applicability:
+          - tlp-clear
+          - tlp-green
+          - tlp-amber
+          - tlp-red
+        recommendation: |
+          Attributes that commonly change during a long dormancy include age
+          bracket, the validity of delegated or guardian consent, verified
+          contact channels, and organizational role. Restoring access from
+          attributes captured before the dormancy period can grant access the
+          identity is no longer entitled to.
     threats:
       - reference-id: CCC
         entries:
