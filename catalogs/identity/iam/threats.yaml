@@ -132,7 +132,7 @@ threats:
           - reference-id: CCC.IAM.CP09
             strength: 0 # Not yet specified
             remarks: Federated Identity - OIDC
-          - reference-id: CCC.IAM.CP11
+          - reference-id: CCC.IAM.CP13
             strength: 0 # Not yet specified
             remarks: Temporary Credentials
 
