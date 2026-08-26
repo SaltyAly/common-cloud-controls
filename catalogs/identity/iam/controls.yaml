@@ -340,7 +340,8 @@ controls:
       Ensure that unused IAM credentials are removed to reduce exposure
       in the event of potential compromise, and that reactivating
       credentials deactivated for dormancy requires fresh verification of
-      the requesting identity.
+      the requesting identity and re-evaluation of the identity attributes
+      that condition its access.
     assessment-requirements:
       - id: CCC.IAM.CN08.AR01
         text: |
