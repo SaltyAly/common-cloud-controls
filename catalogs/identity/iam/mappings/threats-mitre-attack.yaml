@@ -118,7 +118,7 @@ mappings:
   relationship: relates-to
   targets:
   - entry-id: T1078.004
-    remarks: 'Valid Accounts: Cloud Accounts (fail-open facet: credentials remain usable in a state that should block them)'
+    remarks: 'Valid Accounts: Cloud Accounts'
 remarks: Migrated from inline external-mappings previously on threats.yaml. relationship is a conservative
   'relates-to' default (the source carried no relationship semantics); framework version and the target
   entry-type for non-attack frameworks (OWASP, CWE) are provisional, pending WG review.

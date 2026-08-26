@@ -335,10 +335,12 @@ controls:
           - reference-id: AC-2
   - id: CCC.IAM.CN08
     group: Access
-    title: Maximum Age for Unused Credentials
+    title: Maximum Age for Unused Credentials and Verified Reactivation
     objective: |
       Ensure that unused IAM credentials are removed to reduce exposure
-      in the event of potential compromise.
+      in the event of potential compromise, and that reactivating
+      credentials deactivated for dormancy requires fresh verification of
+      the requesting identity.
     assessment-requirements:
       - id: CCC.IAM.CN08.AR01
         text: |
@@ -364,10 +366,9 @@ controls:
           - tlp-amber
           - tlp-red
         recommendation: |
-          Dormant accounts are attractive takeover targets because their
-          legitimate owners are absent and anomalies are less likely to be
-          noticed. A recovery path for dormant credentials that is weaker than
-          initial provisioning undermines the benefit of deactivating them.
+          Require the reactivation path to use the same identity-proofing
+          mechanism used at initial credential provisioning, rather than a
+          weaker recovery flow such as an email-only reset.
       - id: CCC.IAM.CN08.AR03
         text: |
           When credentials that were deactivated for dormancy are reactivated,
@@ -379,9 +380,9 @@ controls:
           - tlp-amber
           - tlp-red
         recommendation: |
-          Attributes that commonly change during a long dormancy include age
-          bracket, the validity of delegated or guardian consent, verified
-          contact channels, and organizational role. Restoring access from
+          Attributes that commonly change during a long dormancy include
+          group membership, assumable roles, MFA enrollment, and policy
+          conditions tied to organizational role. Restoring access from
           attributes captured before the dormancy period can grant access the
           identity is no longer entitled to.
     threats:
@@ -533,184 +534,6 @@ controls:
           - reference-id: CA-7
             strength: 0 # Not yet specified
           - reference-id: RA-5
-  - id: CCC.IAM.CN12
-    group: Access
-    title: Enforce Consent Form Fidelity to Backend Scope Data
-    objective: |
-      Ensure that when a consent form is presented to a user, the front-end
-      copy and data shown match the backend scopes data of the authorization
-      request exactly, so that a user can never grant access broader than,
-      narrower than, or different from what was displayed and approved.
-    assessment-requirements:
-      - id: CCC.IAM.CN12.AR01
-        text: |
-          When a consent form is presented to a user, the form MUST display
-          every scope present in the backend authorization request.
-        applicability:
-          - tlp-clear
-          - tlp-green
-          - tlp-amber
-          - tlp-red
-        recommendation: ""
-      - id: CCC.IAM.CN12.AR02
-        text: |
-          When a consent form is presented to a user, the front-end copy
-          shown for each displayed scope MUST match the registered
-          description of the corresponding backend scope identifier.
-        applicability:
-          - tlp-clear
-          - tlp-green
-          - tlp-amber
-          - tlp-red
-        recommendation: ""
-      - id: CCC.IAM.CN12.AR03
-        text: |
-          When a consent form is presented to a user, the form MUST NOT
-          display any permission, scope, or data-access description that
-          does not correspond to a scope present in the backend
-          authorization request.
-        applicability:
-          - tlp-clear
-          - tlp-green
-          - tlp-amber
-          - tlp-red
-        recommendation: ""
-      - id: CCC.IAM.CN12.AR04
-        text: |
-          When the front-end copy for a requested scope cannot be resolved,
-          or does not match the backend scopes data, the service MUST NOT
-          present the consent form.
-        applicability:
-          - tlp-clear
-          - tlp-green
-          - tlp-amber
-          - tlp-red
-        recommendation: ""
-      - id: CCC.IAM.CN12.AR05
-        text: |
-          When the front-end copy for a requested scope cannot be resolved,
-          or does not match the backend scopes data, the service MUST deny
-          the authorization request.
-        applicability:
-          - tlp-clear
-          - tlp-green
-          - tlp-amber
-          - tlp-red
-        recommendation: ""
-      - id: CCC.IAM.CN12.AR06
-        text: |
-          When a user approves a consent form, the service MUST NOT issue a
-          grant or credential containing scopes that were not displayed on
-          the consent form at the time of approval.
-        applicability:
-          - tlp-clear
-          - tlp-green
-          - tlp-amber
-          - tlp-red
-        recommendation: ""
-    threats:
-      - reference-id: CCC
-        entries:
-          - reference-id: CCC.IAM.TH01
-            strength: 0 # Not yet specified
-            remarks: Valid Cloud Credentials Abuse
-    guidelines:
-      - reference-id: NIST-CSF
-        entries:
-          - reference-id: PR.AA-05
-      - reference-id: NIST_800_53
-        entries:
-          - reference-id: AC-3
-            strength: 0 # Not yet specified
-          - reference-id: AC-6
-  - id: CCC.IAM.CN13
-    group: Access
-    title: Revoke Derived Credentials and Sessions Upon Consent Revocation
-    objective: |
-      Ensure that when a user or administrator revokes an authorization grant
-      or consent, all credentials and sessions derived from that grant cease
-      to provide access, and the revoked state is propagated consistently to
-      every dependent system so that no party continues to act on a grant
-      that the user believes to be revoked.
-    assessment-requirements:
-      - id: CCC.IAM.CN13.AR01
-        text: |
-          When an authorization grant or consent is revoked, the service MUST
-          invalidate all active credentials, tokens, and sessions that were
-          issued under that grant.
-        applicability:
-          - tlp-clear
-          - tlp-green
-          - tlp-amber
-          - tlp-red
-        recommendation: ""
-      - id: CCC.IAM.CN13.AR02
-        text: |
-          When an authorization grant or consent is revoked, the revoked state
-          MUST be propagated to all dependent systems and relying parties within
-          24 hours.
-        applicability:
-          - tlp-clear
-          - tlp-green
-          - tlp-amber
-          - tlp-red
-        recommendation: |
-          Attach a correlation identifier to each revocation event so its delivery
-          can be traced end to end across emitting, queueing, and receiving systems.
-      - id: CCC.IAM.CN13.AR03
-        text: |
-          When an authorization grant or consent is revoked, the recorded
-          consent state MUST NOT diverge between the service and any relying
-          party beyond the 24-hour propagation period.
-        applicability:
-          - tlp-clear
-          - tlp-green
-          - tlp-amber
-          - tlp-red
-        recommendation: |
-          Verify bidirectional convergence: a revocation initiated on either side
-          must result in both sides reaching a consistent revoked state.
-      - id: CCC.IAM.CN13.AR04
-        text: |
-          When delivery of a revocation event to a dependent system fails, the
-          failure MUST be logged.
-        applicability:
-          - tlp-green
-          - tlp-amber
-          - tlp-red
-        recommendation: |
-          Route undeliverable revocation events to a dead-letter queue, and
-          periodically drain and replay the queue to confirm that downstream
-          consent state converges after an outage.
-      - id: CCC.IAM.CN13.AR05
-        text: |
-          When an undelivered revocation event exceeds the propagation
-          deadline, an alert MUST be generated.
-        applicability:
-          - tlp-green
-          - tlp-amber
-          - tlp-red
-        recommendation: |
-          Alarm on dead-letter queue depth so that undelivered revocation
-          events are surfaced before the propagation deadline is exceeded.
-    threats:
-      - reference-id: CCC
-        entries:
-          - reference-id: CCC.IAM.TH01
-            strength: 0 # Not yet specified
-            remarks: Valid Cloud Credentials Abuse
-          - reference-id: CCC.IAM.TH10
-            strength: 0 # Not yet specified
-            remarks: Orphaned Federated Identity Retains Access
-    guidelines:
-      - reference-id: NIST-CSF
-        entries:
-          - reference-id: PR.AA-01
-      - reference-id: NIST_800_53
-        entries:
-          - reference-id: AC-2
-            strength: 0 # Not yet specified
-          - reference-id: AC-12
   - id: CCC.IAM.CN14
     group: Access
     title: Restrict IAM Role Creation
@@ -899,6 +722,9 @@ controls:
           - reference-id: CCC.IAM.TH13
             strength: 0 # Not yet specified
             remarks: Undefined Handling of Identity Lifecycle States
+          - reference-id: CCC.IAM.TH14
+            strength: 0 # Not yet specified
+            remarks: Transient Lifecycle-State Denials Mistaken for Permanent Revocation
           - reference-id: CCC.IAM.TH01
             strength: 0 # Not yet specified
             remarks: Valid Cloud Credentials Abuse

@@ -299,11 +299,7 @@ threats:
       suspension, or a compliance review. When a credential or authorization
       operation against an account in such a state has no defined outcome, the
       service may fail open and honor an operation that the state should
-      block. When the denial returned during a transient state is
-      indistinguishable from a permanent revocation, relying parties may tear
-      down valid authorization state in response, causing a silent divergence
-      between the identity provider and its relying parties that neither side
-      detects.
+      block.
     capabilities:
       - reference-id: CCC
         entries:
@@ -325,3 +321,26 @@ threats:
           - reference-id: CCC.IAM.CP14
             strength: 0 # Not yet specified
             remarks: Multi-Factor Authentication (MFA)
+
+  - id: CCC.IAM.TH14
+    group: Access
+    title: Transient Lifecycle-State Denials Mistaken for Permanent Revocation
+    description: |
+      An account in a transient lifecycle state produces denials that are
+      indistinguishable from a permanent revocation of the underlying grant.
+      A relying party that receives such a denial may tear down valid
+      authorization state, such as a stored link or grant, causing a silent
+      divergence between the identity provider and its relying parties that
+      neither side detects.
+    capabilities:
+      - reference-id: CCC
+        entries:
+          - reference-id: CCC.IAM.CP08
+            strength: 0 # Not yet specified
+            remarks: Federated Identity - SAML
+          - reference-id: CCC.IAM.CP09
+            strength: 0 # Not yet specified
+            remarks: Federated Identity - OIDC
+          - reference-id: CCC.IAM.CP13
+            strength: 0 # Not yet specified
+            remarks: Temporary Credentials
