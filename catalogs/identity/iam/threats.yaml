@@ -132,7 +132,7 @@ threats:
           - reference-id: CCC.IAM.CP09
             strength: 0 # Not yet specified
             remarks: Federated Identity - OIDC
-          - reference-id: CCC.IAM.CP11
+          - reference-id: CCC.IAM.CP13
             strength: 0 # Not yet specified
             remarks: Temporary Credentials
 
@@ -288,3 +288,59 @@ threats:
           - reference-id: CCC.IAM.CP15
             strength: 0 # Not yet specified
             remarks: Role Assumption / Delegation
+
+  - id: CCC.IAM.TH13
+    group: Access
+    title: Undefined Handling of Identity Lifecycle States
+    description: |
+      An identity passes through a transient lifecycle state, such as an
+      in-progress multi-factor challenge, a credential reset in flight, a
+      pending deletion, an administrative suspension, a restoration from
+      suspension, or a compliance review. When a credential or authorization
+      operation against an account in such a state has no defined outcome, the
+      service may fail open and honor an operation that the state should
+      block.
+    capabilities:
+      - reference-id: CCC
+        entries:
+          - reference-id: CCC.IAM.CP02
+            strength: 0 # Not yet specified
+            remarks: IAM Users
+          - reference-id: CCC.IAM.CP04
+            strength: 0 # Not yet specified
+            remarks: Password Management
+          - reference-id: CCC.IAM.CP08
+            strength: 0 # Not yet specified
+            remarks: Federated Identity - SAML
+          - reference-id: CCC.IAM.CP09
+            strength: 0 # Not yet specified
+            remarks: Federated Identity - OIDC
+          - reference-id: CCC.IAM.CP13
+            strength: 0 # Not yet specified
+            remarks: Temporary Credentials
+          - reference-id: CCC.IAM.CP14
+            strength: 0 # Not yet specified
+            remarks: Multi-Factor Authentication (MFA)
+
+  - id: CCC.IAM.TH14
+    group: Access
+    title: Transient Lifecycle-State Denials Mistaken for Permanent Revocation
+    description: |
+      An account in a transient lifecycle state produces denials that are
+      indistinguishable from a permanent revocation of the underlying grant.
+      A relying party that receives such a denial may tear down valid
+      authorization state, such as a stored link or grant, causing a silent
+      divergence between the identity provider and its relying parties that
+      neither side detects.
+    capabilities:
+      - reference-id: CCC
+        entries:
+          - reference-id: CCC.IAM.CP08
+            strength: 0 # Not yet specified
+            remarks: Federated Identity - SAML
+          - reference-id: CCC.IAM.CP09
+            strength: 0 # Not yet specified
+            remarks: Federated Identity - OIDC
+          - reference-id: CCC.IAM.CP13
+            strength: 0 # Not yet specified
+            remarks: Temporary Credentials
