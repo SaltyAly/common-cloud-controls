@@ -74,3 +74,28 @@ PR heads (local; fork PRs do not run Actions).
    authorization-grant capability, or rule it out of scope for identity/iam.
    Owner: Eddie Knight → Security WG.
 2. **Rob's verdict on `.feature` usage** — unchanged, still open.
+
+## Addendum — 2026-08-25 evening (self-review round + pre-flight hardening)
+
+- **PR #6 advanced to `0e08671`** after a structured self-review of both
+  PRs: `85c07ff` completes the CN08 discoverability fix (objective now also
+  names AR03's attribute re-evaluation), `0e08671` corrects TH04's
+  temporary-credentials capability ref CP11→CP13 — a fourth pre-existing
+  reference/remark mismatch of the same class as the CN01/CN03/CN11 fixes,
+  missed by every prior human pass. PR bodies tightened (CN14/CN15 bullet
+  precision, complete incidental-fix disclosure, provenance, PR #7
+  merge-order note).
+- **Pre-flight now includes a fourth, local-only gate:** reference
+  integrity (every `CCC.IAM.*` reference-id resolves; remarks match the
+  referenced entry's title), diff-aware against the finos baseline. No CI
+  gate checks this — a control citing a nonexistent threat passes all
+  three upstream gates.
+- **Verified CI gate semantics** (via a seeded-defect fixture corpus, local):
+  yamllint's `line-length` permits unbreakable over-length tokens
+  (`allow-non-breakable-words` via the relaxed preset); `new-lines` checks
+  only the first line ending, so a stray CRLF later in a file passes;
+  trailing spaces are error-level under this repo's config.
+- **Consent-controls direction (PR #7):** maintainer guidance (DM) is to
+  model the capability and threat(s) before the controls — rework queued:
+  add a consent/authorization-grant capability + a purpose-built
+  misrepresented-scope threat, then rewire CN12/CN13 references.
