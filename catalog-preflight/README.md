@@ -101,6 +101,15 @@ than a suspicion.
    rationale placement) are invisible to all mechanical gates and remain a
    human-review responsibility.
 
+## Self-tests
+
+`run-checks.sh` self-tests on every run via the fixture corpus, so it needs
+no separate test entry point. `check-drift.sh` is covered by
+`tests/check-drift-selftest.sh`, which exercises it against synthetic
+repositories with no network: a clean pin, drift adding dash-style catalog
+IDs (the detector's one historical miss, pinned as a regression), and drift
+overlapping the branch's own files.
+
 ## Working practice: finding → fixture
 
 When a review or CI run surfaces a defect class these gates should have
