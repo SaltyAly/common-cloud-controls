@@ -113,6 +113,12 @@ mappings:
     remarks: Trusted Relationship
   - entry-id: T1548.005
     remarks: 'Abuse Elevation Control Mechanism: Temporary Elevated Cloud Access'
+- id: CCC.IAM.TH15-mitre-attack
+  source: CCC.IAM.TH15
+  relationship: relates-to
+  targets:
+  - entry-id: T1528
+    remarks: Steal Application Access Token
 remarks: Migrated from inline external-mappings previously on threats.yaml. relationship is a conservative
   'relates-to' default (the source carried no relationship semantics); framework version and the target
   entry-type for non-attack frameworks (OWASP, CWE) are provisional, pending WG review.

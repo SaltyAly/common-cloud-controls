@@ -288,3 +288,30 @@ threats:
           - reference-id: CCC.IAM.CP15
             strength: 0 # Not yet specified
             remarks: Role Assumption / Delegation
+
+  - id: CCC.IAM.TH15
+    group: Access
+    title: Authorization Grant Diverges from Displayed Consent
+    description: |
+      A consent interface renders scope descriptions that do not match the
+      scopes in the underlying authorization request, or a revoked grant is
+      not enforced as revoked by every component that honors credentials
+      derived from it. The authorization actually granted or retained then
+      differs from what the consent interface displayed: approval issues a
+      grant broader than, narrower than, or different from what was shown,
+      and credentials derived from a revoked grant continue to provide
+      access. Data and resources are exposed to external systems beyond the
+      access the user approved, with no indication to the user or the
+      service operator that displayed and enforced authorization differ.
+    capabilities:
+      - reference-id: CCC
+        entries:
+          - reference-id: CCC.IAM.CP09
+            strength: 0 # Not yet specified
+            remarks: Federated Identity - OIDC
+          - reference-id: CCC.IAM.CP13
+            strength: 0 # Not yet specified
+            remarks: Temporary Credentials
+          - reference-id: CCC.IAM.CP19
+            strength: 0 # Not yet specified
+            remarks: User Consent and Authorization Grant Management

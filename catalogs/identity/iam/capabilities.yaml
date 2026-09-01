@@ -140,3 +140,11 @@ capabilities:
       and ability to export reports of who has access and whether it's
       being used, etc. These tools will increase the visibility,
       auditability and compliance of identities.
+  - id: CCC.IAM.CP19
+    group: Access
+    title: User Consent and Authorization Grant Management
+    description: |
+      The service can present a consent interface that displays the scopes
+      an external system requests before a delegated-authorization grant is
+      issued, and records each grant so that it can be listed, queried, and
+      revoked by the user or an administrator.
