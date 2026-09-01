@@ -561,9 +561,9 @@ controls:
     threats:
       - reference-id: CCC
         entries:
-          - reference-id: CCC.IAM.TH01
+          - reference-id: CCC.IAM.TH15
             strength: 0 # Not yet specified
-            remarks: Valid Cloud Credentials Abuse
+            remarks: Authorization Grant Diverges from Displayed Consent
     guidelines:
       - reference-id: NIST-CSF
         entries:
@@ -639,8 +639,6 @@ controls:
           When an undelivered revocation event exceeds the propagation
           deadline, an alert MUST be generated.
         applicability:
-          - tlp-green
-          - tlp-amber
           - tlp-red
         recommendation: |
           Alarm on dead-letter queue depth so that undelivered revocation
@@ -648,12 +646,9 @@ controls:
     threats:
       - reference-id: CCC
         entries:
-          - reference-id: CCC.IAM.TH01
+          - reference-id: CCC.IAM.TH15
             strength: 0 # Not yet specified
-            remarks: Valid Cloud Credentials Abuse
-          - reference-id: CCC.IAM.TH10
-            strength: 0 # Not yet specified
-            remarks: Orphaned Federated Identity Retains Access
+            remarks: Authorization Grant Diverges from Displayed Consent
     guidelines:
       - reference-id: NIST-CSF
         entries:
